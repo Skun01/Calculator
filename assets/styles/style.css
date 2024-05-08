@@ -54,6 +54,10 @@ body{
     padding: 10px;
 }
 
+.typing{
+    overflow: auto;
+}
+
 .btn-section{
     background-color: #313131;
     margin-top: -10px;

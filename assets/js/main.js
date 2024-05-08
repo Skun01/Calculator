@@ -3,18 +3,32 @@ const inputScreenElem = document.querySelector('.input-screen');
 const btnSectionElem = document.querySelector('.btn-section');
 
 const backspaceBtnElem = btnSectionElem.querySelector('#backspace');
-const equalElem = btnSectionElem.querySelector('#equal')
+const equalBtnElem = btnSectionElem.querySelector('#equal');
+const acBtnElem = btnSectionElem.querySelector('#ac');
 
 const typeElem = inputScreenElem.querySelector('.typing');
-let userInput = '';
+let userInput = '', history = '';
 
 btnSectionElem.addEventListener('click', e=>{
-    if([...e.target.classList].includes('row') || e.target === btnSectionElem) return;
+    if([...e.target.classList].includes('row')) return;
+    switch(e.target){
+        case backspaceBtnElem:
+        case equalBtnElem:
+        case acBtnElem:
+            return;
+    }
     if(userInput.length >= 39) alert('Full');
     else{
         userInput += e.target.textContent;
         typeElem.textContent = userInput;
     }
+});
+
+acBtnElem.addEventListener('click', e=>{
+    userInput = '';
+    history = '';
+    typeElem.textContent = '';
+    historyScreenElem.textContent = '';
 });
 
 backspaceBtnElem.addEventListener('click', e=>{
@@ -25,4 +39,8 @@ backspaceBtnElem.addEventListener('click', e=>{
         userInput = tmp.join('');
         typeElem.textContent = userInput;
     }
+});
+
+equalBtnElem.addEventListener('click', e=>{
+    
 });
