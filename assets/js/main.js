@@ -1,3 +1,4 @@
+
 const historyScreenElem = document.querySelector('.history-screen');
 const inputScreenElem = document.querySelector('.input-screen');
 const btnSectionElem = document.querySelector('.btn-section');
@@ -43,16 +44,30 @@ equalBtnElem.addEventListener('click', e=>{
     const infixEx = seperExpression(userInput);
     const postfix = toPostfix(infixEx);
     let result = postfixCalc(postfix);
-    history = userInput;
-    userInput = result;
-    typeElem.textContent = userInput;
-    historyScreenElem.textContent = history;
+    if(isNaN(result)){
+        alert('bạn nhập không đúng biểu thức, bạn bị ngu à');
+        return;
+    }else{
+        history = userInput;
+        userInput = result + "";
+        typeElem.textContent = userInput;
+        historyScreenElem.textContent = history;
+    }
+    
 });
 
 document.body.addEventListener('keydown', e=>{
     if(mapBtn[e.key] !== undefined){
         const elem = document.querySelector(`#${mapBtn[e.key]}`);
         elem.dispatchEvent(new Event('click', {bubbles: true}));
+        elem.classList.add('btn-active');
+    }
+});
+document.body.addEventListener('keyup', e=>{
+    if(mapBtn[e.key] !== undefined){
+        const elem = document.querySelector(`#${mapBtn[e.key]}`);
+        elem.dispatchEvent(new Event('click', {bubbles: true}));
+        elem.classList.remove('btn-active');
     }
 });
 const operatorRegEx = ['+', '-', '*', '/', '(', ')'];
@@ -105,7 +120,6 @@ function toPostfix(infix, obj = {start : 0}){
 }
 
 function calcCustom(a, b, oper){
-    console.log(oper);
     let ans = 0;
     switch(oper){
         case '+': ans = a + b; break;

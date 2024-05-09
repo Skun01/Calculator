@@ -100,6 +100,9 @@ body{
 .btn:active{
     box-shadow: none;
 }
+.btn-active{
+    box-shadow: none;
+}
 .special-btn{
     color: #78007a;
     background-color: #ffbfff;
