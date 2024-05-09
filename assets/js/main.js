@@ -8,27 +8,10 @@ const acBtnElem = btnSectionElem.querySelector('#ac');
 
 const typeElem = inputScreenElem.querySelector('.typing');
 let userInput = '', history = '';
-
 const mapBtn = {
-    1 : "one",
-    2 : "two",
-    3 : "three",
-    4 : "four",
-    5 : "five",
-    6 : "six",
-    7 : "seven",
-    8 : "eight",
-    9 : "nine",
-    0 : "zero",
-    "." : "dot",
-    "+" : "plus",
-    "-" : "minus",
-    "*" : "multiply",
-    "/" : "divide",
-    Backspace : "backspace",
-    Enter : "equal",
-    "(" : "open-par",
-    ")" : "close-par",
+    1 : "one",2 : "two",3 : "three",4 : "four",5 : "five",6 : "six",7 : "seven",8 : "eight",
+    9 : "nine",0 : "zero", "." : "dot", "+" : "plus", "-" : "minus", "*" : "multiply", "/" : "divide",
+    Backspace : "backspace", Enter : "equal", "(" : "open-par", ")" : "close-par",
 }
 
 btnSectionElem.addEventListener('click', e=>{
@@ -58,23 +41,26 @@ backspaceBtnElem.addEventListener('click', e=>{
 
 equalBtnElem.addEventListener('click', e=>{
     const infixEx = seperExpression(userInput);
-    console.log(infixEx);
+    const postfix = toPostfix(infixEx);
+    let result = postfixCalc(postfix);
+    history = userInput;
+    userInput = result;
+    typeElem.textContent = userInput;
+    historyScreenElem.textContent = history;
 });
 
 document.body.addEventListener('keydown', e=>{
     if(mapBtn[e.key] !== undefined){
-        console.log(mapBtn[e.key]);
         const elem = document.querySelector(`#${mapBtn[e.key]}`);
         elem.dispatchEvent(new Event('click', {bubbles: true}));
     }
 });
-
+const operatorRegEx = ['+', '-', '*', '/', '(', ')'];
 function seperExpression(str){
     const ans = [];
-    const regex = /[\+\-\*\/]/g;
     let curr = '';
     for(let i = 0; i < str.length; i++){
-        if(regex.test(str[i])){
+        if(operatorRegEx.includes(str[i])){
             if(curr){
                 ans.push(curr);
                 curr = '';
@@ -84,4 +70,61 @@ function seperExpression(str){
     }
     if(curr) ans.push(curr);
     return ans;
+}
+const priorityOperator = {
+    '*':1,
+    '/':1,
+    '+':2,
+    '-':2,
+}
+
+function toPostfix(infix, obj = {start : 0}){
+    let result = [];
+    const oper = [];
+    while(obj.start < infix.length){
+        if(infix[obj.start] === '('){
+            obj.start++;
+            const anotherExpress = toPostfix(infix, obj);
+            result = [...result, ...anotherExpress];
+        }else if(infix[obj.start] === ')'){
+            break;
+        }else{
+            if(operatorRegEx.includes(infix[obj.start])){
+                if(oper.length !== 0 && priorityOperator[oper[oper.length - 1]] < priorityOperator[infix[obj.start]]){
+                    result.push(oper.pop());
+                }
+                oper.push(infix[obj.start]);
+            }else result.push(infix[obj.start]);
+        }
+        obj.start++;
+    }
+    while(oper.length !== 0){
+        result.push(oper.pop());
+    }
+    return result;
+}
+
+function calcCustom(a, b, oper){
+    console.log(oper);
+    let ans = 0;
+    switch(oper){
+        case '+': ans = a + b; break;
+        case '-': ans = a - b; break;
+        case '*': ans = a*b; break;
+        case '/': ans = a/b;
+    }
+    return +ans.toFixed(4);
+}
+
+function postfixCalc(postfix){
+    const stack = [];
+    for(let i = 0; i < postfix.length; i++){
+        if(operatorRegEx.includes(postfix[i])){
+            let secondElem = stack.pop(), firstElem = stack.pop();
+            stack.push(calcCustom(firstElem,secondElem, postfix[i]));
+        }else{
+            stack.push(+postfix[i]);
+        }
+    }
+    return stack.pop();
 }

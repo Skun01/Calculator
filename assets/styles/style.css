@@ -36,7 +36,7 @@ body{
 }
 
 .history-screen{
-    flex: 3;
+    flex: 1;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -45,9 +45,9 @@ body{
 }
 
 .input-screen{
-    font-size: 30px;
+    font-size: 40px;
     font-weight: bolder;
-    flex: 5;
+    flex: 3;
     display: flex;
     justify-content: flex-end;
     align-items: center;
